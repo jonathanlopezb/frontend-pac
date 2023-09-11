@@ -64,7 +64,9 @@ html {
 
 article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   display: block; }
-
+.bg-yellow-ind{
+  background-color: #EDB930;
+}
 body {
   margin: 0;
   font-family: Open Sans, sans-serif;

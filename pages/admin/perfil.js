@@ -29,7 +29,6 @@ function Profile() {
   const hasSession = async () => {
     const usuario = await getSession();
     setUser(usuario);
-    console.log("user", usuario);
   };
   React.useEffect(() => {
     hasSession();
@@ -38,7 +37,6 @@ function Profile() {
     <>
       <UserHeader />
       {/* Page content */}
-
       <Container className="mt--7" fluid>
         <Row>
           <Col className="order-xl-2 mb-5 mb-xl-0" xl="4">
@@ -46,20 +44,18 @@ function Profile() {
               <Row className="justify-content-center">
                 <Col className="order-lg-2" lg="3">
                   <div className="card-profile-image">
-                    <a href="#" onClick={(e) => e.preventDefault()}>
-                      <img
-                        alt="..."
-                        className="rounded-circle"
-                        src={require("assets/img/theme/team-1-800x800.jpg")}
-                      />
-                    </a>
+                    <img
+                      alt="..."
+                      className="rounded-circle"
+                      src={require("assets/img/icons/person.png")}
+                    />
                   </div>
                 </Col>
               </Row>
 
               <CardBody className="pt-0 mt-5 pt-md-4">
                 <div className="text-center mt-md-7">
-                  <h3>
+                  <h3 className="text-capitalize">
                     {user.primer_nombre} {user.primer_apellido} {user.second_lastname}
                   </h3>
                   <div className="h5 mt-4 text-capitalize">
@@ -68,7 +64,7 @@ function Profile() {
                   </div>
                   <hr className="my-4" />
 
-                  <UpdateProfile/>
+                  <UpdateProfile />
                 </div>
               </CardBody>
             </Card>
@@ -196,7 +192,7 @@ function Profile() {
                             className="form-control-label"
                             htmlFor="input-last-name"
                           >
-                            Lineas de investigación
+                            Líneas de investigación
                           </label>
                           <Input
                             className="form-control-alternative"
@@ -300,9 +296,7 @@ function Profile() {
                           </label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
                             id="input-address"
-                            placeholder="Home Address"
                             type="text"
                             disabled
                           />
@@ -320,9 +314,7 @@ function Profile() {
                           </label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue="New York"
                             id="input-city"
-                            placeholder="City"
                             type="text"
                             disabled
                           />
@@ -338,9 +330,7 @@ function Profile() {
                           </label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue="United States"
                             id="input-country"
-                            placeholder="Country"
                             type="text"
                             disabled
                           />

@@ -35,7 +35,7 @@ function ModalPublic(props) {
           <Table className="align-items-center table-flush" responsive>
             <thead className="thead-light">
               <tr>
-                <th scope="col">Titulo</th>
+                <th scope="col">Título</th>
                 <th scope="col">Año</th>
                 <th scope="col">Nombre de la revista</th>
                 <th scope="col">Volumen</th>

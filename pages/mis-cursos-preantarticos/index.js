@@ -55,7 +55,6 @@ const Couses = (props) => {
     const user = await getSession();
     const response = await Apiclient.get(`${PROJECT}/${user.id}`);
     setData(response.data);
-    console.log("dat", user);
   };
 
   useEffect(() => {
@@ -64,7 +63,6 @@ const Couses = (props) => {
 
   const hasSession = async () => {
     const session = await validSession();
-    console.log(session);
     if (session == false) {
       router.push("/auth/login");
     }
@@ -88,7 +86,7 @@ const Couses = (props) => {
     } else if (data.resumen_ejecutivo == null) {
       Swal.fire({
         title: "Guardado!",
-        text: "Tus fases han sido guardadas hasta titulo",
+        text: "Tus fases han sido guardadas hasta Título",
         icon: "success",
         confirmButtonText: "Aceptar",
       });

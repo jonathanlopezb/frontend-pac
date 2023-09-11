@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 // node.js library that concatenates classes (strings)
@@ -8,6 +9,8 @@ import Chart from "chart.js";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
 // reactstrap components
+import Apiclient, { UPDATE_PROJECT, PROJECT } from "../../../services/Apiclient";
+
 import {
   Button,
   Card,
@@ -36,25 +39,21 @@ import {
 
 import AdminNavbar from "../../../components/Navbars/AdminNavbar";
 import Footer from "../../../components/Footers/AdminFooter";
-import Apiclient, { PROJECT, UPDATE_PROJECT } from "../../../services/Apiclient";
-
 import { getSession } from "../../../services/sessionStore";
 import Swal from "sweetalert2";
 
-export default function Planteamiento() {
+export default function Trayectoria() {
   const router = useRouter();
   const [value, setValue] = useState("");
   const [data, setData] = useState([]);
 
-
   const store = async () => {
     const user = await getSession();
     const data = {
-      planteamiento_del_problema: value,
+      trayectoria_y_capacidad_en_investigacion_investigador: value,
     };
     console.log(data);
     const res = await Apiclient.post(`${UPDATE_PROJECT}/${user.id}`, data);
-    console.log(res);
     if (res.status === "ok") {
       Swal.fire({
         title: "Felicidades!",
@@ -66,15 +65,14 @@ export default function Planteamiento() {
     } else {
       alert("error");
     }
+    console.log("dat", res);
   };
 
   const getData = async () => {
     const user = await getSession();
     const response = await Apiclient.get(`${PROJECT}/${user.id}`);
     setData(response.data);
-    if (response?.data == null) {
-        router.push("/admin/dashboard")
-    }
+    console.log("dat", data);
   };
 
   useEffect(() => {
@@ -91,15 +89,19 @@ export default function Planteamiento() {
       <Container className="mt-3">
         <div className="pl-lg-4">
           <FormGroup>
-            <label>Planteamiento del Problema</label>
-            <Input
-              className="form-control-alternative"
-              placeholder="Escribe el texto aquí "
-              rows="4"
-              type="textarea"
-              onChange={(v) => setValue(v.target.value)}
-              defaultValue={data.planteamiento_del_problema }
-            />
+            <Row>
+              <label>Trayectoria y Capacidad en Investigación del investigador</label>
+
+              <Input
+                className="form-control-alternative"
+                placeholder="Escribe el texto aquí "
+                rows="4"
+                type="textarea"
+                onChange={(v) => setValue(v.target.value)}
+                defaultValue={data?.trayectoria_y_capacidad_en_investigacion_investigador}
+              />
+            </Row>
+            
             <Button
               className="mt-4"
               color="primary"

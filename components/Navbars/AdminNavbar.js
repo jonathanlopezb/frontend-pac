@@ -25,26 +25,34 @@ import { useRouter } from "next/router";
 function AdminNavbar({ brandText }) {
   const [session, setSession] = React.useState(getSession());
   const [user, setUser] = React.useState({});
-  const router = useRouter(); 
+  const router = useRouter();
 
   const hasSession = async () => {
     const usuario = await getSession();
     setUser(usuario);
-  }
+  };
 
   const logOut = async () => {
     await logout();
     router.push("/auth/login");
-  }
+  };
 
+  const irPerfil = () => {
+    router.push("/admin/perfil");
+  };
 
   useEffect(() => {
     hasSession();
-  } , []);
+  }, []);
 
   return (
     <>
-      <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main" style={{background: "#263C69"}}>
+      <Navbar
+        className="navbar-top navbar-dark"
+        expand="md"
+        id="navbar-main"
+        style={{ background: "#263C69" }}
+      >
         <Container fluid>
           <Link href="/">
             <span className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block">
@@ -75,16 +83,20 @@ function AdminNavbar({ brandText }) {
                     /> */}
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
-                    <span className="mb-0 text-sm font-weight-bold">
+                    <span className="mb-0 text-sm font-weight-bold text-capitalize">
                       {user.primer_nombre} {user.primer_apellido}
                     </span>
                   </Media>
                 </Media>
               </DropdownToggle>
               <DropdownMenu className="dropdown-menu-arrow" right>
+                <DropdownItem onClick={irPerfil}>
+                  <i className="ni ni-single-02" />
+                  <span>Ver perfil</span>
+                </DropdownItem>
                 <DropdownItem onClick={logOut}>
                   <i className="ni ni-user-run" />
-                  <span>Logout</span>
+                  <span>Salir</span>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>

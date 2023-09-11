@@ -74,26 +74,26 @@ function Register() {
   const registrar = async (e) => {
     e.preventDefault();
     let data = {
-      primer_nombre: value.primer_nombre,
-      segundo_nombre: value.segundo_nombre,
-      primer_apellido: value.primer_apellido,
-      segundo_apellido: value.segundo_apellido,
+      primer_nombre: value.primer_nombre.toLowerCase(),
+      segundo_nombre: value.segundo_nombre.toLowerCase(),
+      primer_apellido: value.primer_apellido.toLowerCase(),
+      segundo_apellido: value.segundo_apellido.toLowerCase(),
       fecha_nacimiento: value.fecha_nacimiento,
       tipo_documento: value.tipo_documento,
       cedula: value.cedula,
-      correo: value.correo,
+      correo: value.correo.toLowerCase(),
       password: value.password,
-      nacionalidad: value.nacionalidad,
-      pais_residencia: value.pais_residencia,
-      ciudad: value.ciudad,
+      nacionalidad: value.nacionalidad.toLowerCase(),
+      pais_residencia: value.pais_residencia.toLowerCase(),
+      ciudad: value.ciudad.toLowerCase(),
       direccion: value.direccion,
       sexo: value.sexo,
-      intereses: value.intereses,
-      nivel_estudio: value.nivel_estudio,
-      linea_investigacion: value.linea_investigacion,
-      institucion: value.institucion,
-      user_twitter: value.user_twitter,
-      user_linkedin: value.user_linkedin,
+      intereses: value.intereses.toLowerCase(),
+      nivel_estudio: value.nivel_estudio.toLowerCase(),
+      linea_investigacion: value.linea_investigacion.toLowerCase(),
+      institucion: value.institucion.toLowerCase(),
+      user_twitter: value.user_twitter.toLowerCase(),
+      user_linkedin: value.user_linkedin.toLowerCase(),
       rol: value.rol,
     };
     console.log(data);
@@ -106,7 +106,7 @@ function Register() {
     if (result.status === "ok") {
       Swal.fire({
         title: "¡Felicitaciones!",
-        text: "Te has registrado con éxito,  se te ha enviado la contraseña al correo electrónico ya puedes iniciar sesión ",
+        text: "Te has registrado con éxito, se te ha enviado la contraseña al correo electrónico. Ya puedes iniciar sesión.",
         icon: "success",
         confirmButtonText: "Ok",
       }).then(function () {
@@ -397,7 +397,7 @@ function Register() {
                       <span className="text-muted">
                         Acepto los{" "}
                         <Link href="/terms" className="text-muted">
-                          <a>política de datos</a>
+                          <a>Política de datos</a>
                         </Link>
                       </span>
                     </label>

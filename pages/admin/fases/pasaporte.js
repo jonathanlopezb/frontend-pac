@@ -50,15 +50,16 @@ export default function Objetivo() {
 
   const store = async () => {
     const user = await getSession();
-    const data = {
-      objetivo: value,
+    var data = {
+      pasaporte: value.replace(/[^a-z0-9]/gi, '_').toLowerCase(),
     };
+
     console.log(data);
     const res = await Apiclient.post(`${UPDATE_PROJECT}/${user.id}`, data);
     if (res.status === "ok") {
       Swal.fire({
         title: "Felicidades!",
-        text: "Tu fase ha sido gardada",
+        text: "Tu fase ha sido guardada",
         icon: "success",
         confirmButtonText: "Aceptar",
       });
@@ -81,11 +82,58 @@ export default function Objetivo() {
           <FormGroup>
             <label>Pasaporte</label>
             <FormGroup>
-              <Input id="exampleFile" name="file" type="file" />
-              <FormText>
-                This is some placeholder block-level help text for the above
-                input. It‘s a bit lighter and easily wraps to a new line.
-              </FormText>
+              <Input
+                id="pasaporte"
+                name="pasaporte"
+                type="file"
+                onChange={(v) => setValue(v.target.value)}
+                multiple
+              />
+            </FormGroup>
+            <FormGroup>
+              <Input
+                id="pasaporte"
+                name="pasaporte"
+                type="file"
+                onChange={(v) => setValue(v.target.value)}
+                multiple
+              />
+            </FormGroup>
+            <FormGroup>
+              <Input
+                id="pasaporte"
+                name="pasaporte"
+                type="file"
+                onChange={(v) => setValue(v.target.value)}
+                multiple
+              />
+            </FormGroup>
+            <FormGroup>
+              <Input
+                id="pasaporte"
+                name="pasaporte"
+                type="file"
+                onChange={(v) => setValue(v.target.value)}
+                multiple
+              />
+            </FormGroup>
+            <FormGroup>
+              <Input
+                id="pasaporte"
+                name="pasaporte"
+                type="file"
+                onChange={(v) => setValue(v.target.value)}
+                multiple
+              />
+            </FormGroup>
+            <FormGroup>
+              <Input
+                id="pasaporte"
+                name="pasaporte"
+                type="file"
+                onChange={(v) => setValue(v.target.value)}
+                multiple
+              />
             </FormGroup>
             <Button
               className="mt-4"

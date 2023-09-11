@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 // node.js library that concatenates classes (strings)
@@ -9,7 +9,7 @@ import Chart from "chart.js";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
 // reactstrap components
-import Apiclient, { UPDATE_PROJECT } from "../../../services/Apiclient";
+import Apiclient, { UPDATE_PROJECT, PROJECT } from "../../../services/Apiclient";
 
 import {
   Button,
@@ -45,6 +45,8 @@ import Swal from "sweetalert2";
 export default function ObjetivosEspecificos() {
   const router = useRouter();
   const [value, setValue] = useState("");
+  const [data, setData] = useState([]);
+
 
   const store = async () => {
     const user = await getSession();
@@ -56,7 +58,7 @@ export default function ObjetivosEspecificos() {
     if (res.status === "ok") {
       Swal.fire({
         title: "Felicidades!",
-        text: "Tu fase ha sido gardada",
+        text: "Tu fase ha sido guardada",
         icon: "success",
         confirmButtonText: "Aceptar",
       });
@@ -66,6 +68,16 @@ export default function ObjetivosEspecificos() {
     }
     console.log("dat", res);
   };
+  const getData = async () => {
+    const user = await getSession();
+    const response = await Apiclient.get(`${PROJECT}/${user.id}`);
+    setData(response.data);
+    console.log("dat", data);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const voler = () => {
     router.back();
@@ -84,6 +96,7 @@ export default function ObjetivosEspecificos() {
               rows="4"
               type="textarea"
               onChange={(v) => setValue(v.target.value)}
+              defaultValue={data?.objetivo_especifico}
             />
             <Button
               className="mt-4"

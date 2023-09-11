@@ -15,7 +15,6 @@ function getSession() {
   return new Promise((resolve, reject) => {
     try {
       const session = window.sessionStorage.getItem("session");
-      console.log(session);
       resolve(JSON.parse(session || "{}"));
     } catch (error) {
       reject(error);

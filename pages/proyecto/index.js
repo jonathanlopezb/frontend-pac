@@ -58,7 +58,6 @@ const Projects = (props) => {
     const user = await getSession();
     const response = await Apiclient.get(`${PROJECT}/${user.id}`);
     setData(response.data);
-    console.log("dat", user);
   };
 
   useEffect(() => {
@@ -91,7 +90,7 @@ const Projects = (props) => {
     } else if (data.resumen_ejecutivo == null) {
       Swal.fire({
         title: "Guardado!",
-        text: "Tus fases han sido guardadas hasta titulo",
+        text: "Tus fases han sido guardadas hasta Título",
         icon: "success",
         confirmButtonText: "Aceptar",
       });
@@ -290,12 +289,6 @@ const Projects = (props) => {
         </Row>
         <Row className="mt-5">
           <Col className="mb-5 mb-xl-0" xl="12">
-            <p>programaantarticocolombiano.gov.co</p>
-          
-<p> antarticacolombia.gov.co</p>
-<p>antarticocolombiano.gov.co</p>
-<p> poarco.gov.co</p>
-<p>promantartica.gov.co</p>
 
           </Col>
         </Row>

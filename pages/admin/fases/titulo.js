@@ -36,8 +36,11 @@ import {
 } from "variables/charts.js";
 import Swal from "sweetalert2";
 
-
-import Apiclient, { PROJECT_TITLE, PROJECT } from "../../../services/Apiclient";
+import Apiclient, {
+  PROJECT_TITLE,
+  PROJECT,
+  UPDATE_PROJECT,
+} from "../../../services/Apiclient";
 
 import { getSession } from "../../../services/sessionStore";
 
@@ -53,8 +56,7 @@ export default function Metodologia() {
     const user = await getSession();
     const response = await Apiclient.get(`${PROJECT}/${user.id}`);
     setData(response.data);
-    console.log("dat", data.titulo);
-    console.log("user", user);
+    console.log("datos", data.length);
   };
 
   useEffect(() => {
@@ -67,19 +69,37 @@ export default function Metodologia() {
       titulo: value,
       id_investigador: investigadores.id,
     };
-    console.log(data);
-    const res = await Apiclient.post(PROJECT_TITLE, data);
-    console.log(res);
-    if (res.status === "ok") {
-      Swal.fire({
-        title: "Felicidades!",
-        text: "Tu titulo del proyecto ha sido gardada satisfactoriamente",
-        icon: "success",
-        confirmButtonText: "Aceptar",
-      });
-      router.push("/admin/dashboard");
-    } else {
-      alert("error");
+    console.log(data.length);
+
+    switch (data.length) {
+      case undefined:
+        const res = await Apiclient.post(PROJECT_TITLE, data);
+        console.log("datoss", data.titulo);
+        if (res.status === "ok") {
+          Swal.fire({
+            title: "Felicidades!",
+            text: "Tu Título del proyecto ha sido guardada satisfactoriamente",
+            icon: "success",
+            confirmButtonText: "Aceptar",
+          });
+          router.push("/admin/dashboard");
+        }
+      case data.length >= 0:
+        const response = await Apiclient.post(
+          `${UPDATE_PROJECT}/${investigadores.id}`,
+          data
+        );
+        if (response.status === "ok") {
+          Swal.fire({
+            title: "Felicidades!",
+            text: "Tu Título del proyecto ha sido actualizado satisfactoriamente",
+            icon: "success",
+            confirmButtonText: "Aceptar",
+          });
+          router.push("/admin/dashboard");
+        }
+        break;
+
     }
   };
 
@@ -93,36 +113,37 @@ export default function Metodologia() {
       <Container className="mt-3">
         <div className="pl-lg-4">
           <FormGroup>
-            <label>Titulo</label>
-            <p>
-              Escriba el titulo del proyecto el cual piensa someter.
-            </p>
-            <Input
-              className="form-control-alternative"
-              rows="4"
-              type="textarea"
-              onChange={(v) => setValue(v.target.value)}
-            />
-            <Button
-              className="mt-4"
-              color="primary"
-              type="button"
-              onClick={stoteTitle}
-            >
-              Guardar Cambios
-            </Button>
-            <Button
-              className="mt-4"
-              color="primary"
-              type="button"
-              onClick={voler}
-            >
-              Volver
-            </Button>
+            <label>Título</label>
+            <>
+              <p>Escriba el Título del proyecto el cual piensa someter.</p>
+              <Input
+                className="form-control-alternative"
+                rows="4"
+                type="textarea"
+                defaultValue={data?.titulo}
+                onChange={(v) => setValue(v.target.value)}
+              />
+              <Button
+                className="mt-4"
+                color="primary"
+                type="button"
+                onClick={stoteTitle}
+              >
+                Guardar Cambios
+              </Button>
+              <Button
+                className="mt-4"
+                color="primary"
+                type="button"
+                onClick={voler}
+              >
+                Volver
+              </Button>
+            </>
           </FormGroup>
         </div>
+        <Footer />
       </Container>
-      <Footer />
     </>
   );
 }

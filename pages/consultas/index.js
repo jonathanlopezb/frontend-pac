@@ -83,7 +83,7 @@ const Queries = (props) => {
     } else if (data.resumen_ejecutivo == null) {
       Swal.fire({
         title: "Guardado!",
-        text: "Tus fases han sido guardadas hasta titulo",
+        text: "Tus fases han sido guardadas hasta Título",
         icon: "success",
         confirmButtonText: "Aceptar",
       });

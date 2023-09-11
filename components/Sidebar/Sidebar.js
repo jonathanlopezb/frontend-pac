@@ -75,7 +75,7 @@ function Sidebar(props) {
   };
   const { routes, logo } = props;
   let navbarBrand = (
-    <NavbarBrand href="#pablo" className="pt-0">
+    <NavbarBrand className="pt-0">
       <img alt={logo.imgAlt} className="navbar-brand-img" src={logo.imgSrc} />
     </NavbarBrand>
   );
@@ -162,9 +162,9 @@ function Sidebar(props) {
                 </DropdownItem>
               </Link>
               <DropdownItem divider />
-              <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
+              <DropdownItem onClick={(e) => e.preventDefault()}>
                 <i className="ni ni-user-run" />
-                <span>Logout</span>
+                <span>Salir</span>
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
@@ -220,8 +220,8 @@ function Sidebar(props) {
 
           {/* Divider */}
           <hr className="my-3" />
-          <h6 className="navbar-heading text-muted">Mi progreso</h6>
-          <Progress value="50">25%</Progress>
+          {/* <h6 className="navbar-heading text-muted">Mi progreso</h6>
+          <Progress value="50">25%</Progress> */}
 
           {/* Heading */}
           {/* <h6 className="navbar-heading text-muted">Documentation</h6> */}

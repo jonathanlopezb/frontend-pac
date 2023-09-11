@@ -41,71 +41,94 @@ import {
 
 import Header from "components/Headers/Header.js";
 import { getSession, validSession } from "../../services/sessionStore";
-import Apiclient, { PROJECT } from "../../services/Apiclient";
+import Apiclient, { PROJECT, EVALUADORES } from "../../services/Apiclient";
 
 import "react-step-progress/dist/index.css";
+import AddInvest from "../../components/CoInvest/AddInvest.js";
+import CoInvest from "../../components/CoInvest/CoInvest.js";
+
 const Dashboard = (props) => {
   const [data, setData] = useState([]);
+  const [dataEval, setDataEval] = useState([]);
+  const [project, setProject] = useState([]);
   const router = useRouter();
 
   const getData = async () => {
     const user = await getSession();
     const response = await Apiclient.get(`${PROJECT}/${user.id}`);
-    setData(response.data);
-    console.log("dat", data);
+    setData(response?.data);
   };
 
+  const getProject = async () => {
+    const user = await getSession();
+    const response = await Apiclient.get(`${PROJECT}/${user.id}`);
+    setProject(response.data);
+    console.log("datgaada", response);
+
+    if (response.data !== null) {
+      const responseEval = await Apiclient.get(
+        `${EVALUADORES}/${response.data.id}`
+      );
+      setDataEval(responseEval.data);
+      console.log("datg", responseEval);
+    }
+  };
+
+  const getDataEval = async () => {};
+
   useEffect(() => {
+    getDataEval();
+    getProject();
     getData();
   }, []);
 
-  // const hasSession = async () => {
-  //   const session = await validSession();
-  //   console.log(session);
-  //   if (session == false) {
-  //     router.push("/auth/login");
-  //   }
-  // };
+  const hasSession = async () => {
+    const session = await validSession();
+    if (session == false) {
+      router.push("/auth/login");
+    }
+  };
 
-  // useEffect(() => {
-  //   hasSession();
-  // }, []);
+  useEffect(() => {
+    hasSession();
+  }, []);
 
   if (window.Chart) {
     parseOptions(Chart, chartOptions());
   }
   const save = () => {
-    if (data?.titulo == null) {
-      Swal.fire({
-        title: "Fallo!",
-        text: "Todavía no tienes datos por guardar",
-        icon: "error",
-        confirmButtonText: "Aceptar",
-      });
+    if (
+      data?.titulo &&
+      data?.aspectos_propiedad_intelectual &&
+      data?.bibliografia &&
+      data?.resumen_ejecutivo &&
+      data?.planteamiento_del_problema &&
+      data?.carta_aval &&
+      data?.estado_del_arte &&
+      data?.identificacion_caracterizacion &&
+      data?.metodologia &&
+      data?.palabras &&
+      data?.trayectoria_y_capacidad_en_investigacion_institucion &&
+      data?.trayectoria_y_capacidad_en_investigacion_investigador &&
+      data?.impacto_ambiental &&
+      data?.area_tematica &&
+      data?.objetivo_general &&
+      data?.objetivo_especifico &&
+      data?.pasaporte &&
+      data?.presupuesto &&
+      data?.actividades &&
+      dataEval
+    ) {
       Swal.fire({
         title: "Guardado!",
-        text: "Tus fases han sido guardadas hasta el resumen ejecutivo",
+        text: "Tu información ha sido guardada exitosamente. Para terminar el proceso, por favor dar click en el botón Finalizar y enviar",
         icon: "success",
         confirmButtonText: "Aceptar",
       });
-    } else if (data.resumen_ejecutivo == null) {
+    } else {
       Swal.fire({
         title: "Guardado!",
-        text: "Tus fases han sido guardadas hasta titulo del proyecto",
-        icon: "success",
-        confirmButtonText: "Aceptar",
-      });
-    } else if (data.metodología == null) {
-      Swal.fire({
-        title: "Guardado!",
-        text: "Tus fases han sido guardadas hasta el resumen ejecutivo",
-        icon: "success",
-        confirmButtonText: "Aceptar",
-      });
-    } else if (data.metodología == null) {
-      Swal.fire({
-        title: "Guardado!",
-        text: "Tus fases han sido guardadas hasta metodología",
+        text: "Tu información ha sido guardada exitosamente",
         icon: "success",
         confirmButtonText: "Aceptar",
       });
@@ -114,13 +137,25 @@ const Dashboard = (props) => {
   const finalizar = () => {
     if (
       data?.titulo &&
-      data?.resumen_ejecutivo &&
-      data?.metodología &&
-      data?.trayectoria_y_capacidad_en_investigacion_investigador &&
-      data?.identificacion_y_caracterizacion &&
+      data?.aspectos_propiedad_intelectual &&
       data?.bibliografia &&
-      data?.impacto_ambiental_del_proyecto &&
-      data?.aspectos_de_propiedad_intelectual
+      data?.resumen_ejecutivo &&
+      data?.planteamiento_del_problema &&
+      data?.carta_aval &&
+      data?.estado_del_arte &&
+      data?.identificacion_caracterizacion &&
+      data?.metodologia &&
+      data?.palabras &&
+      data?.trayectoria_y_capacidad_en_investigacion_institucion &&
+      data?.trayectoria_y_capacidad_en_investigacion_investigador &&
+      data?.impacto_ambiental &&
+      data?.area_tematica &&
+      data?.objetivo_general &&
+      data?.objetivo_especifico &&
+      data?.pasaporte &&
+      data?.presupuesto &&
+      data?.actividades &&
+      dataEval
     ) {
       Swal.fire({
         title: "Felicidades!",
@@ -138,6 +173,19 @@ const Dashboard = (props) => {
     }
   };
 
+  const validateDateSet = () => {
+    if (data == null) {
+      Swal.fire({
+        title: "Error!",
+        text: "Debes colocar primero un titulo a tu proyecto",
+        icon: "error",
+        confirmButtonText: "Aceptar",
+      });
+      router.push("/admin/dashboard");
+    } else {
+      null;
+    }
+  };
 
   return (
     <>
@@ -145,6 +193,7 @@ const Dashboard = (props) => {
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row>
+          <h5></h5>
           <Col lg="12" xl="12">
             <Card className="card-stats mb-4 mb-xl-0 m-2">
               <Link href="/admin/fases/titulo">
@@ -156,17 +205,55 @@ const Dashboard = (props) => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          Titulo del proyecto
+                          Título del proyecto
                         </CardTitle>
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.titulo ? "" : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape ${
+                            data?.titulo ? "bg-green" : "bg-yellow-ind"
+                          } text-white rounded-circle shadow `}
                         >
                           <i
                             className={
                               data?.titulo
+                                ? "ni ni-check-bold "
+                                : "ni ni-collection"
+                            }
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </a>
+              </Link>
+            </Card>
+          </Col>
+          <Col lg="12" xl="12" onClick={validateDateSet}>
+            <Card className="card-stats mb-4 mb-xl-0 m-2">
+              <Link href={"/admin/fases/area-tematica"}>
+                <a>
+                  <CardBody
+                    style={data?.area_tematica && { background: "#D7D7D7" }}
+                  >
+                    <Row>
+                      <div className="col">
+                        <CardTitle
+                          tag="h5"
+                          className="text-uppercase text-muted mb-0"
+                        >
+                          área Temática
+                        </CardTitle>
+                      </div>
+                      <Col className="col-auto">
+                        <div
+                          className={`icon icon-shape  ${
+                            data?.area_tematica ? "bg-green" : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
+                        >
+                          <i
+                            className={
+                              data?.area_tematica
                                 ? "ni ni-check-bold"
                                 : "ni ni-collection"
                             }
@@ -179,12 +266,44 @@ const Dashboard = (props) => {
               </Link>
             </Card>
           </Col>
-
-          <Col lg="12" xl="12">
+          <Col lg="12" xl="12" onClick={validateDateSet}>
             <Card className="card-stats mb-4 mb-xl-0 m-2">
-              <Link
-                href="/admin/fases/resumen-ejecutivo"
-              >
+              <Link href={"/admin/fases/palabras-claves"}>
+                <a>
+                  <CardBody style={data?.palabras && { background: "#D7D7D7" }}>
+                    <Row>
+                      <div className="col">
+                        <CardTitle
+                          tag="h5"
+                          className="text-uppercase text-muted mb-0"
+                        >
+                          Palabras claves
+                        </CardTitle>
+                      </div>
+                      <Col className="col-auto">
+                        <div
+                          className={`icon icon-shape  ${
+                            data?.palabras ? "bg-green" : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
+                        >
+                          <i
+                            className={
+                              data?.palabras
+                                ? "ni ni-check-bold"
+                                : "ni ni-collection"
+                            }
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </a>
+              </Link>
+            </Card>
+          </Col>
+          <Col lg="12" xl="12" onClick={validateDateSet}>
+            <Card className="card-stats mb-4 mb-xl-0 m-2">
+              <Link href={"/admin/fases/resumen-ejecutivo"}>
                 <a>
                   <CardBody
                     style={data?.resumen_ejecutivo && { background: "#D7D7D7" }}
@@ -200,8 +319,11 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.resumen_ejecutivo ? "" : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.resumen_ejecutivo
+                              ? "bg-green"
+                              : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
@@ -218,11 +340,9 @@ const Dashboard = (props) => {
               </Link>
             </Card>
           </Col>
-          <Col lg="12" xl="12">
+          <Col lg="12" xl="12" onClick={validateDateSet}>
             <Card className="card-stats mb-4 mb-xl-0 m-2">
-              <Link
-                href="/admin/fases/planteamiento-del-problema"
-              >
+              <Link href={"/admin/fases/planteamiento-del-problema"}>
                 <a>
                   <CardBody
                     style={
@@ -242,8 +362,11 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.planteamiento_del_problema ? "" : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.planteamiento_del_problema
+                              ? "bg-green"
+                              : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
@@ -260,11 +383,13 @@ const Dashboard = (props) => {
               </Link>
             </Card>
           </Col>
-          <Col lg="12" xl="12">
+          <Col lg="12" xl="12" onClick={validateDateSet}>
             <Card className="card-stats mb-4 mb-xl-0 m-2">
               <Link href="/admin/fases/objetivo-general">
                 <a>
-                  <CardBody style={data?.objetivo && { background: "#D7D7D7" }}>
+                  <CardBody
+                    style={data?.objetivo_general && { background: "#D7D7D7" }}
+                  >
                     <Row>
                       <div className="col">
                         <CardTitle
@@ -276,12 +401,15 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.objetivo_general ? "" : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.objetivo_general
+                              ? "bg-green"
+                              : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
-                              data?.objetivo
+                              data?.objetivo_general
                                 ? "ni ni-check-bold"
                                 : "ni ni-collection"
                             }
@@ -294,28 +422,35 @@ const Dashboard = (props) => {
               </Link>
             </Card>
           </Col>
-          <Col lg="12" xl="12">
+          <Col lg="12" xl="12" onClick={validateDateSet}>
             <Card className="card-stats mb-4 mb-xl-0 m-2">
               <Link href="/admin/fases/objetivo-especifico">
                 <a>
-                  <CardBody style={data?.objetivo_especifico && { background: "#D7D7D7" }}>
+                  <CardBody
+                    style={
+                      data?.objetivo_especifico && { background: "#D7D7D7" }
+                    }
+                  >
                     <Row>
                       <div className="col">
                         <CardTitle
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          Objetivo Específicos
+                          Objetivos Específicos
                         </CardTitle>
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.objetivo ? "" : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.objetivo_especifico
+                              ? "bg-green"
+                              : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
-                              data?.objetivo
+                              data?.objetivo_especifico
                                 ? "ni ni-check-bold"
                                 : "ni ni-collection"
                             }
@@ -328,11 +463,9 @@ const Dashboard = (props) => {
               </Link>
             </Card>
           </Col>
-          <Col lg="12" xl="12">
+          <Col lg="12" xl="12" onClick={validateDateSet}>
             <Card className="card-stats mb-4 mb-xl-0 m-2">
-              <Link
-                href="/admin/fases/estado-del-arte"
-              >
+              <Link href="/admin/fases/estado-del-arte">
                 <a>
                   <CardBody
                     style={data?.estado_del_arte && { background: "#D7D7D7" }}
@@ -348,8 +481,9 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.estado_del_arte ? "" : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.estado_del_arte ? "bg-green" : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
@@ -367,12 +501,12 @@ const Dashboard = (props) => {
             </Card>
           </Col>
 
-          <Col lg="12" xl="12">
+          <Col lg="12" xl="12" onClick={validateDateSet}>
             <Card className="card-stats mb-4 mb-xl-0 m-2">
               <Link href="/admin/fases/metodologia">
                 <a>
                   <CardBody
-                    style={data?.metodología && { background: "#D7D7D7" }}
+                    style={data?.metodologia && { background: "#D7D7D7" }}
                   >
                     <Row>
                       <div className="col">
@@ -385,12 +519,13 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.metodología ? "" : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.metodologia ? "bg-green" : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
-                              data?.metodología
+                              data?.metodologia
                                 ? "ni ni-check-bold"
                                 : "ni ni-collection"
                             }
@@ -403,15 +538,13 @@ const Dashboard = (props) => {
               </Link>
             </Card>
           </Col>
-          <Col lg="12" xl="12">
+          <Col lg="12" xl="12" onClick={validateDateSet}>
             <Card className="card-stats mb-4 mb-xl-0 m-2">
-              <Link
-                href="/admin/fases/identificacion-y-caracterizacion"
-              >
+              <Link href="/admin/fases/identificacion-y-caracterizacion">
                 <a>
                   <CardBody
                     style={
-                      data?.identificacion_y_caracterizacion && {
+                      data?.identificacion_caracterizacion && {
                         background: "#D7D7D7",
                       }
                     }
@@ -427,14 +560,15 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.identificacion_y_caracterizacion
-                            ? ""
-                            : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.identificacion_caracterizacion
+                              ? "bg-green"
+                              : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
-                              data?.identificacion_y_caracterizacion
+                              data?.identificacion_caracterizacion
                                 ? "ni ni-check-bold"
                                 : "ni ni-collection"
                             }
@@ -447,11 +581,9 @@ const Dashboard = (props) => {
               </Link>
             </Card>
           </Col>
-          <Col lg="12" xl="12">
+          <Col lg="12" xl="12" onClick={validateDateSet}>
             <Card className="card-stats mb-4 mb-xl-0 m-2">
-              <Link
-                href="/admin/fases/trayectoria-y-capacidad-en-investigacion"
-              >
+              <Link href="/admin/fases/trayectoria-y-capacidad-en-investigacion-institucion-investigador">
                 <a>
                   <CardBody
                     style={
@@ -472,10 +604,11 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.trayectoria_y_capacidad_en_investigacion_investigador
-                            ? ""
-                            : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.trayectoria_y_capacidad_en_investigacion_investigador
+                              ? "bg-green"
+                              : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
@@ -492,9 +625,7 @@ const Dashboard = (props) => {
               </Link>
             </Card>
             <Card className="card-stats mb-4 mb-xl-0 m-2">
-              <Link
-                href="/admin/fases/trayectoria-y-capacidad-en-investigacion"
-              >
+              <Link href="/admin/fases/trayectoria-y-capacidad-en-investigacion-institucion">
                 <a>
                   <CardBody
                     style={
@@ -515,10 +646,11 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.trayectoria_y_capacidad_en_investigacion_institucion
-                            ? ""
-                            : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.trayectoria_y_capacidad_en_investigacion_institucion
+                              ? "bg-green"
+                              : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
@@ -535,15 +667,13 @@ const Dashboard = (props) => {
               </Link>
             </Card>
           </Col>
-          <Col lg="12" xl="12">
+          <Col lg="12" xl="12" onClick={validateDateSet}>
             <Card className="card-stats mb-4 mb-xl-0 m-2">
-              <Link
-                href="/admin/fases/impacto-ambiental-del-proyecto"
-              >
+              <Link href="/admin/fases/impacto-ambiental-del-proyecto">
                 <a>
                   <CardBody
                     style={
-                      data?.impacto_ambiental_del_proyecto && {
+                      data?.impacto_ambiental && {
                         background: "#D7D7D7",
                       }
                     }
@@ -559,14 +689,15 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.impacto_ambiental_del_proyecto
-                            ? ""
-                            : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.impacto_ambiental
+                              ? "bg-green"
+                              : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
-                              data?.impacto_ambiental_del_proyecto
+                              data?.impacto_ambiental
                                 ? "ni ni-check-bold"
                                 : "ni ni-collection"
                             }
@@ -579,15 +710,13 @@ const Dashboard = (props) => {
               </Link>
             </Card>
           </Col>
-          <Col lg="12" xl="12">
+          <Col lg="12" xl="12" onClick={validateDateSet}>
             <Card className="card-stats mb-4 mb-xl-0 m-2">
-              <Link
-                href="/admin/fases/aspectos-de-propiedad-intelectual"
-              >
+              <Link href="/admin/fases/aspectos-de-propiedad-intelectual">
                 <a>
                   <CardBody
                     style={
-                      data?.aspectos_de_propiedad_intelectual && {
+                      data?.aspectos_propiedad_intelectual && {
                         background: "#D7D7D7",
                       }
                     }
@@ -603,14 +732,15 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.aspectos_de_propiedad_intelectual
-                            ? ""
-                            : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.aspectos_propiedad_intelectual
+                              ? "bg-green"
+                              : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
-                              data?.aspectos_de_propiedad_intelectual
+                              data?.aspectos_propiedad_intelectual
                                 ? "ni ni-check-bold"
                                 : "ni ni-collection"
                             }
@@ -625,9 +755,7 @@ const Dashboard = (props) => {
           </Col>
           <Col lg="12" xl="12">
             <Card className="card-stats mb-4 mb-xl-0 m-2">
-              <Link
-                href="/admin/fases/bibliografia"
-              >
+              <Link href="/admin/fases/bibliografia">
                 <a>
                   <CardBody
                     style={data?.bibliografia && { background: "#D7D7D7" }}
@@ -643,8 +771,9 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.bibliografia ? "" : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.bibliografia ? "bg-green" : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
@@ -664,13 +793,11 @@ const Dashboard = (props) => {
 
           <Col lg="12" xl="12">
             <Card className="card-stats mb-4 mb-xl-0 m-2">
-              <Link
-                href="/admin/fases/aspectos-de-propiedad-intelectual"
-              >
+              <Link href="/admin/fases/posibles-evaluadores">
                 <a>
                   <CardBody
                     style={
-                      data?.aspectos_de_propiedad_intelectual && {
+                      dataEval.nombres && {
                         background: "#D7D7D7",
                       }
                     }
@@ -686,14 +813,13 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.aspectos_de_propiedad_intelectual
-                            ? ""
-                            : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            dataEval.id ? "bg-green" : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
-                              data?.aspectos_de_propiedad_intelectual
+                              dataEval.id
                                 ? "ni ni-check-bold"
                                 : "ni ni-collection"
                             }
@@ -708,13 +834,11 @@ const Dashboard = (props) => {
           </Col>
           <Col lg="12" xl="12">
             <Card className="card-stats mb-4 mb-xl-0 m-2">
-              <Link
-                href="/admin/fases/pasaporte"
-              >
+              <Link href="/admin/fases/pasaporte">
                 <a>
                   <CardBody
                     style={
-                      data?.aspectos_de_propiedad_intelectual && {
+                      data?.pasaporte && {
                         background: "#D7D7D7",
                       }
                     }
@@ -730,14 +854,13 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.aspectos_de_propiedad_intelectual
-                            ? ""
-                            : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.pasaporte ? "bg-green" : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
-                              data?.aspectos_de_propiedad_intelectual
+                              data?.pasaporte
                                 ? "ni ni-check-bold"
                                 : "ni ni-collection"
                             }
@@ -752,13 +875,11 @@ const Dashboard = (props) => {
           </Col>
           <Col lg="12" xl="12">
             <Card className="card-stats mb-4 mb-xl-0 m-2">
-              <Link
-                href="/admin/fases/carta-aval"
-              >
+              <Link href="/admin/fases/carta-aval">
                 <a>
                   <CardBody
                     style={
-                      data?.aspectos_de_propiedad_intelectual && {
+                      data?.carta_aval && {
                         background: "#D7D7D7",
                       }
                     }
@@ -774,14 +895,13 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.aspectos_de_propiedad_intelectual
-                            ? ""
-                            : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.carta_aval ? "bg-green" : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
-                              data?.aspectos_de_propiedad_intelectual
+                              data?.carta_aval
                                 ? "ni ni-check-bold"
                                 : "ni ni-collection"
                             }
@@ -816,8 +936,9 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.presupuesto ? "" : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.presupuesto ? "bg-green" : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
@@ -840,7 +961,7 @@ const Dashboard = (props) => {
                 <a>
                   <CardBody
                     style={
-                      data?.presupuesto && {
+                      data?.actividades && {
                         background: "#D7D7D7",
                       }
                     }
@@ -856,12 +977,13 @@ const Dashboard = (props) => {
                       </div>
                       <Col className="col-auto">
                         <div
-                          className={`icon icon-shape ${data?.presupuesto ? "" : "bg-green"
-                            } text-white rounded-circle shadow`}
+                          className={`icon icon-shape  ${
+                            data?.actividades ? "bg-green" : "bg-yellow-ind"
+                          } text-white rounded-circle shadow`}
                         >
                           <i
                             className={
-                              data?.presupuesto
+                              data?.actividades
                                 ? "ni ni-check-bold"
                                 : "ni ni-collection"
                             }
@@ -875,161 +997,8 @@ const Dashboard = (props) => {
             </Card>
           </Col>
         </Row>
-        <Row className="mt-5">
-          <Col className="mb-5 mb-xl-0" xl="12">
-            <Card className="shadow">
-              <CardHeader className="border-0">
-                <Row className="align-items-center">
-                  <div className="col">
-                    <h3 className="mb-0"> Investigadores vinculados a mi proyecto</h3>
-                  </div>
-                </Row>
-              </CardHeader>
-              <Table className="align-items-center table-flush" responsive>
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">Nombres</th>
-                    <th scope="col">Apellidos</th>
-                    <th scope="col">Rol</th>
-                    <th scope="col">Investigador de campo</th>
-                    <th scope="col">Coreo electrónico</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row"></th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Card>
-          </Col>
-        </Row>
-        <Row className="mt-5">
-          <Col className="mb-5 mb-xl-0" xl="12">
-            <Card className="shadow">
-              <CardHeader className="border-0">
-                <Row className="align-items-center">
-                  <div className="col">
-                    <h3 className="mb-0">
-                      {" "}
-                      Vincular Investigadores a mi proyecto
-                    </h3>
-                  </div>
-                </Row>
-              </CardHeader>
-              <Table className="align-items-center table-flush" responsive>
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">Primer nombre</th>
-                    <th scope="col">Segundo nombre</th>
-                    <th scope="col">Primer apellido</th>
-                    <th scope="col">Primer apellido</th>
-                    <th scope="col">Rol</th>
-                    <th scope="col">Investigador de campo</th>
-                    <th scope="col">Coreo electrónico</th>
-                    <th scope="col">Institución </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">
-                      <InputGroup className="input-group-alternative mb-3">
-                        <Input
-                          type="text"
-                          name="apellidos"
-                          id="nationality"
-                          // onChange={handleChange}
-                          required
-                        />
-                      </InputGroup>
-                    </th>
-
-                    <td>
-                      <InputGroup className="input-group-alternative mb-3">
-                        <Input
-                          type="text"
-                          name="apellidos"
-                          id="nationality"
-                          // onChange={handleChange}
-                          required
-                        />
-                      </InputGroup>
-                    </td>
-                    <td>
-                      <InputGroup className="input-group-alternative mb-3">
-                        <Input
-                          type="text"
-                          name="apellidos"
-                          id="nationality"
-                          // onChange={handleChange}
-                          required
-                        />
-                      </InputGroup>
-                    </td>
-                    <td>
-                      <InputGroup className="input-group-alternative mb-3">
-                        <Input
-                          type="text"
-                          name="apellidos"
-                          id="nationality"
-                          // onChange={handleChange}
-                          required
-                        />
-                      </InputGroup>
-                    </td>
-                    <td>Co-investigador</td>
-                    <td>
-                      <InputGroup className="input-group-alternative mb-3">
-                        <select
-                          className="form-control"
-                          id="campo"
-                          name="campo"
-                          required
-                        >
-                          <option value="">Seleccione un valor</option>
-                          <option value="si">si</option>
-                          <option value="no">No</option>
-                        </select>
-                      </InputGroup>
-                    </td>
-                    <td>
-                      <InputGroup className="input-group-alternative mb-3">
-                        <Input
-                          type="email"
-                          name="email"
-                          id="nationality"
-                          // onChange={handleChange}
-                          required
-                        />
-                      </InputGroup>
-                    </td>
-                    <td>
-                      <InputGroup className="input-group-alternative mb-3">
-                        <Input
-                          type="email"
-                          name="email"
-                          id="nationality"
-                          // onChange={handleChange}
-                          required
-                        />
-                      </InputGroup>
-                    </td>
-                    <td>
-                      <Button color="primary" type="button">
-                        Vincular 
-                      </Button>
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Card>
-          </Col>
-        </Row>
+        <AddInvest />
+        <CoInvest />
 
         <Row className="d-flex justify-content-between">
           <Button
@@ -1040,14 +1009,35 @@ const Dashboard = (props) => {
           >
             Guardar
           </Button>
-          <Button
-            className="mt-4"
-            type="button"
-            color="primary"
-            onClick={finalizar}
-          >
-            Finalizar y Enviar
-          </Button>
+          {data?.titulo &&
+          data?.aspectos_propiedad_intelectual &&
+          data?.bibliografia &&
+          data?.resumen_ejecutivo &&
+          data?.planteamiento_del_problema &&
+          data?.carta_aval &&
+          data?.estado_del_arte &&
+          data?.identificacion_caracterizacion &&
+          data?.metodologia &&
+          data?.palabras &&
+          data?.trayectoria_y_capacidad_en_investigacion_institucion &&
+          data?.trayectoria_y_capacidad_en_investigacion_investigador &&
+          data?.impacto_ambiental &&
+          data?.area_tematica &&
+          data?.objetivo_general &&
+          data?.objetivo_especifico &&
+          data?.pasaporte &&
+          data?.presupuesto &&
+          data?.actividades &&
+          dataEval ? (
+            <Button
+              className="mt-4"
+              type="button"
+              color="primary"
+              onClick={finalizar}
+            >
+              Finalizar y Enviar
+            </Button>
+          ) : null}
         </Row>
       </Container>
     </>

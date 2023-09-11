@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 // node.js library that concatenates classes (strings)
@@ -36,13 +36,14 @@ import {
 
 import AdminNavbar from "../../../components/Navbars/AdminNavbar";
 import Footer from "../../../components/Footers/AdminFooter";
-import Apiclient, { UPDATE_PROJECT } from "../../../services/Apiclient";
+import Apiclient, { UPDATE_PROJECT, PROJECT } from "../../../services/Apiclient";
 import { getSession } from "../../../services/sessionStore";
 import Swal from "sweetalert2";
 
 export default function Ejecutivo() {
   const router = useRouter();
   const [value, setValue] = useState("");
+  const [data, setData] = useState([]);
 
   const store = async () => {
     const user = await getSession();
@@ -66,6 +67,17 @@ export default function Ejecutivo() {
     }
   };
 
+  const getData = async () => {
+    const user = await getSession();
+    const response = await Apiclient.get(`${PROJECT}/${user.id}`);
+    setData(response.data);
+    console.log("dat", data);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   const voler = () => {
     router.back();
   };
@@ -80,6 +92,7 @@ export default function Ejecutivo() {
             <Input
               className="form-control-alternative"
               placeholder="Escribe el texto aquí "
+              defaultValue={data?.resumen_ejecutivo }
               rows="4"
               type="textarea"
               onChange={(v) => setValue(v.target.value)}

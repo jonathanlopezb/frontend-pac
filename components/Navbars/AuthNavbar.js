@@ -20,7 +20,7 @@ function AdminNavbar() {
         <Container className="px-4">
           <Link href="/admin/dashboard">
             <span>
-              <NavbarBrand href="#pablo">
+              <NavbarBrand>
                 <img
                   alt="..."
                   src={require("assets/img/brand/pac.png")}
@@ -54,7 +54,7 @@ function AdminNavbar() {
             <Nav className="ml-auto" navbar>
               <NavItem>
                 <Link href="/auth/register">
-                  <NavLink href="#pablo" className="nav-link-icon">
+                  <NavLink className="nav-link-icon">
                     <i className="ni ni-circle-08" />
                     <span className="nav-link-inner--text">Registro de investigadores</span>
                   </NavLink>
@@ -62,7 +62,7 @@ function AdminNavbar() {
               </NavItem>
               <NavItem>
                 <Link href="/auth/login">
-                  <NavLink href="#pablo" className="nav-link-icon">
+                  <NavLink className="nav-link-icon">
                     <i className="ni ni-key-25" />
                     <span className="nav-link-inner--text">Inicia Sesión</span>
                   </NavLink>

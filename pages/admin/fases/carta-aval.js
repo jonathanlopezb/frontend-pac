@@ -49,14 +49,14 @@ export default function Aval() {
   const store = async () => {
     const user = await getSession();
     const data = {
-      objetivo: value,
+      carta_aval: value,
     };
     console.log(data);
     const res = await Apiclient.post(`${UPDATE_PROJECT}/${user.id}`, data);
     if (res.status === "ok") {
       Swal.fire({
         title: "Felicidades!",
-        text: "Tu fase ha sido gardada",
+        text: "Tu fase ha sido guardada",
         icon: "success",
         confirmButtonText: "Aceptar",
       });

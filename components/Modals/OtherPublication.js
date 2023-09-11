@@ -21,7 +21,7 @@ function ModalPublicOther(props) {
   return (
     <div>
       <Button color="primary" onClick={toggle}>
-        Registrar otra Publicación
+        Registrar otra publicación
       </Button>
       <Modal isOpen={modal} fade={false} toggle={toggle} size="xl">
         <Card className="shadow">
@@ -35,7 +35,7 @@ function ModalPublicOther(props) {
           <Table className="align-items-center table-flush" responsive>
             <thead className="thead-light">
               <tr>
-              <th scope="col">Titulo</th>
+              <th scope="col">Título</th>
                 <th scope="col">Año</th>
                 <th scope="col">Nombre del medio</th>
                 <th scope="col">Enlace a la publicación</th>

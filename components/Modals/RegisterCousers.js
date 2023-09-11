@@ -35,7 +35,7 @@ function ModalRegister(props) {
           <Table className="align-items-center table-flush" responsive>
             <thead className="thead-light">
               <tr>
-                <th scope="col">Titulo del curso</th>
+                <th scope="col">Título del curso</th>
                 <th scope="col">institución</th>
                 <th scope="col">Adjuntar certificado</th>
               </tr>

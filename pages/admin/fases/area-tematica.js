@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
-// node.js library that concatenates classes (strings)
-import classnames from "classnames";
-// javascipt plugin for creating charts
-import Chart from "chart.js";
-// react plugin used to create charts
-import { Line, Bar } from "react-chartjs-2";
-// reactstrap components
+
 import {
   Button,
   Card,
@@ -37,24 +30,33 @@ import {
 import AdminNavbar from "../../../components/Navbars/AdminNavbar";
 import Footer from "../../../components/Footers/AdminFooter";
 import Apiclient, { PROJECT, UPDATE_PROJECT } from "../../../services/Apiclient";
-
-import { getSession } from "../../../services/sessionStore";
+import { getSession, validSession } from "../../../services/sessionStore";
 import Swal from "sweetalert2";
 
-export default function Planteamiento() {
-  const router = useRouter();
-  const [value, setValue] = useState("");
-  const [data, setData] = useState([]);
 
+
+export default function PalabrasClaves() {
+  const router = useRouter();
+  const [data, setData] = useState([]);
+  const [fields, setFields] = useState([""]);
+  const [value, setValue] = useState("");
+
+
+  const getData = async () => {
+    const user = await getSession();
+    const response = await Apiclient.get(`${PROJECT}/${user.id}`);
+    setData(response.data);
+    if (response?.data == null) {
+        router.push("/admin/dashboard")
+    }
+  };
 
   const store = async () => {
     const user = await getSession();
     const data = {
-      planteamiento_del_problema: value,
+      area_tematica: value,
     };
-    console.log(data);
     const res = await Apiclient.post(`${UPDATE_PROJECT}/${user.id}`, data);
-    console.log(res);
     if (res.status === "ok") {
       Swal.fire({
         title: "Felicidades!",
@@ -68,21 +70,12 @@ export default function Planteamiento() {
     }
   };
 
-  const getData = async () => {
-    const user = await getSession();
-    const response = await Apiclient.get(`${PROJECT}/${user.id}`);
-    setData(response.data);
-    if (response?.data == null) {
-        router.push("/admin/dashboard")
-    }
-  };
-
   useEffect(() => {
     getData();
   }, []);
 
-  const voler = () => {
-    router.back();
+  const volver = () => {
+    router.push("/admin/dashboard");
   };
 
   return (
@@ -91,15 +84,23 @@ export default function Planteamiento() {
       <Container className="mt-3">
         <div className="pl-lg-4">
           <FormGroup>
-            <label>Planteamiento del Problema</label>
+            <label>Área temática</label>
+            {data?.area_tematica ?  <h5>Usted ha elegido:  {data?.area_tematica }</h5> : null}
             <Input
               className="form-control-alternative"
               placeholder="Escribe el texto aquí "
               rows="4"
-              type="textarea"
+              type="select"
+              name="area_tematica"
               onChange={(v) => setValue(v.target.value)}
-              defaultValue={data.planteamiento_del_problema }
-            />
+
+            >
+              <option>Seleccione el área temática</option>
+              <option value="Ciencias de la tierra">Ciencias de la tierra</option>
+              <option value="Ciencias de la vida">Ciencias de la vida</option>
+              <option value="Ciencias físicas">Ciencias físicas</option>
+              <option value="Ciencias sociales y humanas">Ciencias sociales y humanas</option>
+            </Input>
             <Button
               className="mt-4"
               color="primary"
@@ -112,7 +113,7 @@ export default function Planteamiento() {
               className="mt-4"
               color="primary"
               type="button"
-              onClick={voler}
+              onClick={volver}
             >
               Volver
             </Button>

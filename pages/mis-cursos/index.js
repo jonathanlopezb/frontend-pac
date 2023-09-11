@@ -55,7 +55,6 @@ const Couses = (props) => {
     const user = await getSession();
     const response = await Apiclient.get(`${PROJECT}/${user.id}`);
     setData(response.data);
-    console.log("dat", user);
   };
 
   useEffect(() => {
@@ -153,7 +152,7 @@ const Couses = (props) => {
               <Table className="align-items-center table-flush" responsive>
                 <thead className="thead-light">
                   <tr>
-                    <th scope="col">Titulo del curso</th>
+                    <th scope="col">Título del curso</th>
                     <th scope="col">Año</th>
                     <th scope="col">Estado</th>
                   </tr>
@@ -183,7 +182,7 @@ const Couses = (props) => {
               <Table className="align-items-center table-flush" responsive>
                 <thead className="thead-light">
                   <tr>
-                    <th scope="col">Titulo del curso</th>
+                    <th scope="col">Título del curso</th>
                     <th scope="col">institución</th>
                     <th scope="col">Año</th>
                   </tr>

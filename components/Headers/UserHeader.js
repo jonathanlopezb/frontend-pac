@@ -12,7 +12,6 @@ function UserHeader() {
   const hasSession = async () => {
     // const session = await validSession();
     // setSession(session);
-    // console.log("session", session);
     const usuario = await getSession();
     setUser(usuario);
   };
@@ -40,10 +39,9 @@ function UserHeader() {
         <Container className="d-flex align-items-center" fluid>
           <Row>
             <Col lg="10" md="10">
-              <h1 className="display-2 text-white"> {user.name} {user.firt_lastname} {user.second_lastname}</h1>
-              <p className="text-white mt-0 mb-5">
-                Proyecto - {user.name_project}
-              </p>
+              <h1 className="text-white mt-0 mb-5 text-uppercase">
+                Perfil del investigador
+              </h1>
             </Col>
           </Row>
         </Container>

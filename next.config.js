@@ -11,6 +11,9 @@ module.exports = withFonts(
     withImages(
       withSass({
         webpack(config, options) {
+          config.node = {
+            fs: 'empty'
+          }
           config.module.rules.push({
             test: /\.(eot|ttf|woff|woff2)$/,
             use: {
@@ -24,3 +27,5 @@ module.exports = withFonts(
     )
   )
 );
+
+
